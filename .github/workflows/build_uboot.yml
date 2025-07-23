@@ -1,0 +1,125 @@
+name: Build U-Boot for Xilinx Platforms
+# This workflow builds U-Boot for various Xilinx platforms.
+
+on:
+  workflow_dispatch:
+    inputs:
+      vivado_version:
+        description: 'Vivado version that will be used for build'
+        required: true
+        default: '2023.2'
+      x32_defconfigs:
+        description: '32-bit configurations to build'
+        required: true
+        default: 'zynq_zc702_defconfig zynq_zc706_defconfig zynq_zed_defconfig zynq_picozed_defconfig zynq_coraz7_defconfig zynq_adrv9361_defconfig'
+      export_on_server:
+        description: 'Export on server'
+        type: boolean
+        default: false
+
+env: 
+  XILINX_BASE_PATH: /tools/Xilinx
+  FOLDER: Vitis
+  uboot_checkout: u-boot-xlnx
+
+jobs:
+  build-uboot:
+    runs-on: my-runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: analogdevicesinc/u-boot-xlnx
+          ref: master
+          path: ${{env.uboot_checkout}}
+      - name: Clean-up artifacts
+        run: |
+          rm -rf artifacts
+          mkdir -p artifacts
+
+      - name: Run everything
+        working-directory: ${{env.uboot_checkout}}
+        run: |
+          VIVADO_VERSION="${{ inputs.vivado_version }}"
+          GCC_BASE_PATH="${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/$VIVADO_VERSION"
+
+          #build of 32 bit configurations
+          export CROSS_COMPILE=$GCC_BASE_PATH/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/arm-linux-gnueabihf-
+          export ARCH=arm
+
+          X32_DEFCONFIGS="${{ inputs.x32_defconfigs }}"
+          for defcfg in $X32_DEFCONFIGS; do
+             make distclean
+             make $defcfg
+             make -j2
+             echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
+             cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+          done
+
+          # build of 64 bit configurations
+          export CROSS_COMPILE=$GCC_BASE_PATH/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
+          export ARCH=aarch64
+          
+          defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
+          make distclean
+          make $defcfg
+          make -j2
+          echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
+          cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+
+          defcfg=xilinx_zynqmp_zcu102_revA_defconfig
+          make distclean
+          make $defcfg
+          make -j2
+          echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
+          cp u-boot.elf "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+
+          #build of special cases of kria, jupiter and versal (new flow)
+          git checkout adi_k26_smk_dts_wrapper
+          
+          export DEVICE_TREE="zynqmp-smk-k26-revA-wrapper"
+          make distclean
+          make xilinx_zynqmp_virt_defconfig
+          make -j2
+          echo -e "\nxilinx_zynqmp_virt_defconfig done. Output file is: u-boot_${DEVICE_TREE}.elf\n"
+          cp u-boot.elf "../artifacts/u-boot_${DEVICE_TREE}.elf"
+
+          git checkout jupiter-sdr
+        
+
+          export DEVICE_TREE="zynqmp-jupiter-sdr"
+          make distclean
+          make xilinx_zynqmp_virt_defconfig
+          make -j2
+          echo -e "\nxilinx_zynqmp_virt_defconfig done. Output file is: u-boot_${DEVICE_TREE}.elf\n"
+          cp u-boot.elf "../artifacts/u-boot_${DEVICE_TREE}.elf"
+          # Versal case (get files from Xilinx repo)
+          VERSALS=("vck190" "vpk180" "vhk158")
+          for carrier in "${VERSALS[@]}"; do
+             wget "https://github.com/Xilinx/soc-prebuilt-firmware/raw/xilinx_v$VIVADO_VERSION/$carrier-versal/u-boot.elf" -O u-boot_xilinx_versal_$carrier.elf
+             cp u-boot_xilinx_versal_${carrier}.elf "../artifacts/u-boot_xilinx_versal_${carrier}.elf"
+          done
+
+          # system.dtb files are saved under different names in the Xilinx repo
+          wget "https://github.com/Xilinx/soc-prebuilt-firmware/raw/xilinx_v$VIVADO_VERSION/vpk180-versal/system.dtb" -O system_vpk180.dtb
+          cp system_vpk180.dtb "../artifacts/system_vpk180.dtb"
+
+          wget "https://github.com/Xilinx/soc-prebuilt-firmware/raw/xilinx_v$VIVADO_VERSION/vck190-versal/system-default.dtb" -O system_vck190.dtb
+          cp system_vck190.dtb "../artifacts/system_vck190.dtb"
+
+          wget "https://github.com/Xilinx/soc-prebuilt-firmware/raw/xilinx_v$VIVADO_VERSION/vhk158-versal/system.dtb" -O system_vhk158.dtb
+          cp system_vhk158.dtb "../artifacts/system_vhk158.dtb"
+
+          # case for usrp-e310 (copy from main folder)
+          wget https://artifactory.analog.com:443/artifactory/sdg-generic-development/u-boot/main/u-boot-usrp-e310.elf
+          cp u-boot-usrp-e310.elf "../artifacts/u-boot-usrp-e310.elf"
+
+          rm -f u-boot-usrp-e310.elf
+          echo -e "\nuboot was build just for next:\n  32-bit:$X32_DEFCONFIGS\n  64-bits: xilinx_zynqmp_zcu102_revA_defconfi zynqmp-smk-k26-revA-wrapper zynqmp-jupiter-sdr.\n"
+          echo -e "U-boot for Versal platforms is not generated by this job, u-boot.elf files being used from Xilinx repo.\n"
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: u-boot-artifacts
+          path: artifacts/*
