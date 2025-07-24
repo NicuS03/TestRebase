@@ -132,4 +132,4 @@ jobs:
         with:
           name: u-boot-artifacts
           path: artifacts/*
-          failure-on-empty: true
+          if-no-files-found: error
