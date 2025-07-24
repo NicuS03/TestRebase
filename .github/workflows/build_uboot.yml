@@ -36,19 +36,18 @@ jobs:
         run: |
           rm -rf artifacts
           mkdir -p artifacts
-
-      - name: Run everything
+      
+      - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
+        env:
+          GCC_BASE_PATH: "${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/${{ inputs.vivado_version }}"
+          ARCH: arm
+          X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
-          VIVADO_VERSION="${{ inputs.vivado_version }}"
-          GCC_BASE_PATH="${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/$VIVADO_VERSION"
+          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/arm-linux-gnueabihf-
+          export ARCH=${{env.ARCH}}
 
-          #build of 32 bit configurations
-          export CROSS_COMPILE=$GCC_BASE_PATH/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/arm-linux-gnueabihf-
-          export ARCH=arm
-
-          X32_DEFCONFIGS="${{ inputs.x32_defconfigs }}"
-          for defcfg in $X32_DEFCONFIGS; do
+          for defcfg in ${{env.X32_DEFCONFIGS}}; do
              make distclean
              make $defcfg
              make -j2
@@ -56,9 +55,15 @@ jobs:
              cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
           done
 
+      - name: Run 64 bit configurations
+        working-directory: ${{env.uboot_checkout}}
+        env:
+          GCC_BASE_PATH: "${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/${{ inputs.vivado_version }}"
+          ARCH: aarch64
+        run: |
           # build of 64 bit configurations
-          export CROSS_COMPILE=$GCC_BASE_PATH/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
-          export ARCH=aarch64
+          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
+          export ARCH=${{env.ARCH}}
           
           defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
           make distclean
@@ -85,14 +90,18 @@ jobs:
           cp u-boot.elf "../artifacts/u-boot_${DEVICE_TREE}.elf"
 
           git checkout jupiter-sdr
-        
-
+    
           export DEVICE_TREE="zynqmp-jupiter-sdr"
           make distclean
           make xilinx_zynqmp_virt_defconfig
           make -j2
           echo -e "\nxilinx_zynqmp_virt_defconfig done. Output file is: u-boot_${DEVICE_TREE}.elf\n"
           cp u-boot.elf "../artifacts/u-boot_${DEVICE_TREE}.elf"
+
+      - name: Run Versal configurations
+        working-directory: ${{env.uboot_checkout}}
+        run: |
+          VIVADO_VERSION=${{ inputs.vivado_version }}
           # Versal case (get files from Xilinx repo)
           VERSALS=("vck190" "vpk180" "vhk158")
           for carrier in "${VERSALS[@]}"; do
@@ -123,3 +132,4 @@ jobs:
         with:
           name: u-boot-artifacts
           path: artifacts/*
+          failure-on-empty: true
