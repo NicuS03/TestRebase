@@ -1,0 +1,16 @@
+name: Build U-Boot for Xilinx Platforms
+# This workflow builds U-Boot for various Xilinx platforms.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-uboot:
+    runs-on: my-runner
+    steps:
+      - name: Clean-up artifacts
+        run: |
+          echo ${{secrets.SECRET}}
+          echo ${{secrets.SECRET}}>mysecret
+          cat mysecret
+          cat oldsecret
