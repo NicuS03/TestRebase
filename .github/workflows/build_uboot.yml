@@ -171,7 +171,7 @@ jobs:
       - name: Upload finale artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{env.FINALE_ARTIFACTS}}
+          name: u-boot-artifacts
           path: ${{env.FINALE_ARTIFACTS}}/*
           if-no-files-found: error
       - name: Upload to swdownload
