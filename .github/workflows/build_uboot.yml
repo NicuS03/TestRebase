@@ -165,7 +165,7 @@ jobs:
         run: |
           # case for usrp-e310 (copy from main folder)
           wget https://artifactory.analog.com:443/artifactory/sdg-generic-development/u-boot/main/u-boot-usrp-e310.elf
-          cp u-boot-usrp-e310.elf "../${{env.FINALE_ARTIFACTS}}/u-boot-usrp-e310.elf"
+          cp u-boot-usrp-e310.elf "${{env.FINALE_ARTIFACTS}}/u-boot-usrp-e310.elf"
       - name: Move to finale artifacts
         run: |
           cp ${{env.INTERMEDIATE_ARTIFACTS}}/* ${{env.FINALE_ARTIFACTS}}
