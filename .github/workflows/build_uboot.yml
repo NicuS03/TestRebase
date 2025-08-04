@@ -72,22 +72,22 @@ jobs:
           ARCH: aarch64
         run: |
           # build of 64 bit configurations
-          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/aarch64-linux-gnu-
-          export ARCH=${{env.ARCH}}
+          #export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/aarch64-linux-gnu-
+          #export ARCH=${{env.ARCH}}
           
-          defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
-          make distclean
-          make $defcfg
-          make -j2
-          echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
-          cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+          #defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
+          #make distclean
+          #make $defcfg
+          #make -j2
+          #echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
+          #cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
 
-          defcfg=xilinx_zynqmp_zcu102_revA_defconfig
-          make distclean
-          make $defcfg
-          make -j2
-          echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
-          cp u-boot.elf "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+          #defcfg=xilinx_zynqmp_zcu102_revA_defconfig
+          #make distclean
+          #make $defcfg
+          #make -j2
+          #echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
+          #cp u-boot.elf "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
 
           #build of special cases of kria, jupiter and versal (new flow)
           git fetch
@@ -101,7 +101,7 @@ jobs:
           cp u-boot.elf "../artifacts/u-boot_${DEVICE_TREE}.elf"
 
           git checkout jupiter-sdr
-    
+          
           export DEVICE_TREE="zynqmp-jupiter-sdr"
           make distclean
           make xilinx_zynqmp_virt_defconfig
