@@ -43,6 +43,7 @@ jobs:
           mkdir -p artifacts
       
       - name: Run 32 bit configurations
+        if: false
         working-directory: ${{env.uboot_checkout}}
         env:
           GCC_LINARO_FOLDER: ${{env.LINARO_FOLDER}}//gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin
@@ -59,6 +60,10 @@ jobs:
              echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
              cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
           done
+
+      - name: Install dependencies
+        run: |
+          sudp apt install uuid-dev
 
       - name: Run 64 bit configurations
         working-directory: ${{env.uboot_checkout}}
