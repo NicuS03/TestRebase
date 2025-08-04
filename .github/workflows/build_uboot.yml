@@ -23,8 +23,9 @@ jobs:
     steps:
       - name: Install GCC 
         run: |
+          echo "deb http://archive.ubuntu.com/ubuntu focal main universe" | sudo tee /etc/apt/sources.list.d/focal.list
           sudo apt update
-          sudo apt install -y gcc-arm-linux-gnueabihf
+          sudo apt install -y gcc-7-arm-linux-gnueabihf
           sudo apt install -y gcc-aarch64-linux-gnu
           
       - name: Checkout
@@ -41,11 +42,10 @@ jobs:
       - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_BASE_PATH: "${{ env.GCC_BASE_FOLDER }}"
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
-          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/arm-linux-gnueabihf-
+          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/arm-linux-gnueabihf-
           export ARCH=${{env.ARCH}}
 
           for defcfg in ${{env.X32_DEFCONFIGS}}; do
@@ -59,11 +59,10 @@ jobs:
       - name: Run 64 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_BASE_PATH: "${{ env.GCC_BASE_FOLDER }}"
           ARCH: aarch64
         run: |
           # build of 64 bit configurations
-          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
+          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
           export ARCH=${{env.ARCH}}
           
           defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
