@@ -161,6 +161,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: intermediate_artifacts
+          path: ${{env.INTERMEDIATE_ARTIFACTS}}
       - name: Download case for usrp-e310
         run: |
           # case for usrp-e310 (copy from main folder)
