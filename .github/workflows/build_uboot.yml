@@ -4,10 +4,6 @@ name: Build U-Boot for Xilinx Platforms
 on:
   workflow_dispatch:
     inputs:
-      vivado_version:
-        description: 'Vivado version that will be used for build'
-        required: true
-        default: '2023.2'
       x32_defconfigs:
         description: '32-bit configurations to build'
         required: true
@@ -18,14 +14,19 @@ on:
         default: false
 
 env: 
-  XILINX_BASE_PATH: /tools/Xilinx
-  FOLDER: Vitis
+  GCC_BASE_FOLDER: /usr/bin
   uboot_checkout: u-boot-xlnx
 
 jobs:
   build-uboot:
-    runs-on: my-runner
+    runs-on: ubuntu-latest
     steps:
+      - name: Install GCC 
+        run: |
+          sudo apt update
+          sudo apt install -y gcc-arm-linux-gnueabihf
+          sudo apt install -y gcc-aarch64-linux-gnu
+          
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -40,11 +41,11 @@ jobs:
       - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_BASE_PATH: "${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/${{ inputs.vivado_version }}"
+          GCC_BASE_PATH: "${{ env.GCC_BASE_FOLDER }}"
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
-          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/gnu/aarch32/lin/gcc-arm-linux-gnueabi/bin/arm-linux-gnueabihf-
+          export CROSS_COMPILE=${{env.GCC_BASE_PATH}}/arm-linux-gnueabihf-
           export ARCH=${{env.ARCH}}
 
           for defcfg in ${{env.X32_DEFCONFIGS}}; do
@@ -58,7 +59,7 @@ jobs:
       - name: Run 64 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_BASE_PATH: "${{ env.XILINX_BASE_PATH }}/${{ env.FOLDER }}/${{ inputs.vivado_version }}"
+          GCC_BASE_PATH: "${{ env.GCC_BASE_FOLDER }}"
           ARCH: aarch64
         run: |
           # build of 64 bit configurations
