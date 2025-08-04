@@ -4,6 +4,10 @@ name: Build U-Boot for Xilinx Platforms
 on:
   workflow_dispatch:
     inputs:
+      vivado_version:
+        description: 'Vivado version that will be used for download xilinx versal'
+        required: true
+        default: '2023.2'
       x32_defconfigs:
         description: '32-bit configurations to build'
         required: true
@@ -68,6 +72,7 @@ jobs:
           sudo apt install device-tree-compiler
 
       - name: Run 64 bit configurations
+        if: false
         working-directory: ${{env.uboot_checkout}}
         env:
           ARCH: aarch64
@@ -76,21 +81,21 @@ jobs:
           export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/aarch64-linux-gnu-
           export ARCH=${{env.ARCH}}
           
-          #defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
-          #make distclean
-          #make $defcfg
-          #make -j2
-          #echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
-          #cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+          defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
+          make distclean
+          make $defcfg
+          make -j2
+          echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
+          cp u-boot "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
 
-          #defcfg=xilinx_zynqmp_zcu102_revA_defconfig
-          #make distclean
-          #make $defcfg
-          #make -j2
-          #echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
-          #cp u-boot.elf "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
+          defcfg=xilinx_zynqmp_zcu102_revA_defconfig
+          make distclean
+          make $defcfg
+          make -j2
+          echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
+          cp u-boot.elf "../artifacts/u-boot_${defcfg//_defconfig/}.elf"
 
-          #build of special cases of kria, jupiter and versal (new flow)
+          build of special cases of kria, jupiter and versal (new flow)
           git fetch
           git checkout adi_k26_smk_dts_wrapper
           
