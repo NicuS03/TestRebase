@@ -66,7 +66,7 @@ jobs:
           ARCH: aarch64
         run: |
           # build of 64 bit configurations
-          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/gnu/aarch64/lin/aarch64-linux/bin/aarch64-linux-gnu-
+          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/aarch64-linux-gnu-
           export ARCH=${{env.ARCH}}
           
           defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
