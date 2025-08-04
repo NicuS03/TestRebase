@@ -64,6 +64,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt install uuid-dev
+          sudo apt install libgnutls28-dev
 
       - name: Run 64 bit configurations
         working-directory: ${{env.uboot_checkout}}
