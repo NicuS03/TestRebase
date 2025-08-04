@@ -94,7 +94,7 @@ jobs:
           echo -e "\n$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf\n"
           cp u-boot.elf "../${{env.INTERMEDIATE_ARTIFACTS}}/u-boot_${defcfg//_defconfig/}.elf"
 
-          build of special cases of kria, jupiter and versal (new flow)
+          #build of special cases of kria, jupiter and versal (new flow)
           git fetch
           git checkout adi_k26_smk_dts_wrapper
           
