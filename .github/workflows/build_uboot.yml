@@ -149,6 +149,7 @@ jobs:
           
   upload_artifacts:
     runs-on: internal_runner
+    needs: build-uboot
     env: 
       FINALE_ARTIFACTS: finale_artifacts
     steps: 
