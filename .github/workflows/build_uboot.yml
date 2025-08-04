@@ -48,7 +48,6 @@ jobs:
           mkdir -p ${{env.INTERMEDIATE_ARTIFACTS}}
       
       - name: Run 32 bit configurations
-        if: false
         working-directory: ${{env.uboot_checkout}}
         env:
           GCC_LINARO_FOLDER: ${{env.LINARO_FOLDER}}//gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin
@@ -73,7 +72,6 @@ jobs:
           sudo apt install device-tree-compiler
 
       - name: Run 64 bit configurations
-        if: false
         working-directory: ${{env.uboot_checkout}}
         env:
           ARCH: aarch64
