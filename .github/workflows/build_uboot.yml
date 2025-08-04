@@ -63,7 +63,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudp apt install uuid-dev
+          sudo apt install uuid-dev
 
       - name: Run 64 bit configurations
         working-directory: ${{env.uboot_checkout}}
