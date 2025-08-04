@@ -23,9 +23,11 @@ jobs:
     steps:
       - name: Install GCC 
         run: |
-          echo "deb http://archive.ubuntu.com/ubuntu focal main universe" | sudo tee /etc/apt/sources.list.d/focal.list
+          wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
+          sudo mkdir -p /opt/linaro
+          sudo tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz -C /opt/linaro
+          
           sudo apt update
-          sudo apt install -y gcc-7-arm-linux-gnueabihf
           sudo apt install -y gcc-aarch64-linux-gnu
           
       - name: Checkout
