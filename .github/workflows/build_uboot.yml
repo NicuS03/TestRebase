@@ -153,8 +153,9 @@ jobs:
     env: 
       FINALE_ARTIFACTS: finale_artifacts
     steps: 
-      - name: Create finale artifacts
+      - name: Clean-up and create finale artifacts
         run: |
+          rm -rf ${{env.INTERMEDIATE_ARTIFACTS}}
           rm -rf ${{env.FINALE_ARTIFACTS}}
           mkdir -p ${{env.FINALE_ARTIFACTS}}
       - name: Download intermediate artifacts
