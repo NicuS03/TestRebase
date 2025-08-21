@@ -10,7 +10,7 @@ on:
 jobs:
   build-uboot:
     env:
-      EV_2: env_2_${{env.EV_1}}
+      EV_2: env_22
     runs-on: ubuntu_latest
     steps:
       - name: Clean-up artifacts
