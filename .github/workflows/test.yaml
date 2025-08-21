@@ -2,7 +2,6 @@ name: Test
 
 env: 
   EV_1: env_1
-  EV_2: env_2_${{env.EV_1}}
 
 
 on:
@@ -10,6 +9,8 @@ on:
 
 jobs:
   build-uboot:
+    env:
+      EV_2: env_2_${{env.EV_1}}
     runs-on: ubuntu_latest
     steps:
       - name: Clean-up artifacts
