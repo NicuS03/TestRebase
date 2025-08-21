@@ -1,8 +1,8 @@
 name: Test
 
 env: 
-  ENV_1: env_1
-  ENV_2: env_2_${{env.ENV_1}}
+  EV_1: env_1
+  EV_2: env_2_${{env.EV_1}}
 
 
 on:
@@ -14,4 +14,4 @@ jobs:
     steps:
       - name: Clean-up artifacts
         run: |
-          echo ${{env.ENV_2}}
+          echo ${{env.EV_2}}
