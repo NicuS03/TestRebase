@@ -1,16 +1,17 @@
-name: Build U-Boot for Xilinx Platforms
-# This workflow builds U-Boot for various Xilinx platforms.
+name: Test
+
+env: 
+  ENV_1: env_1
+  ENV_2: env_2_${{env.ENV_1}}
+
 
 on:
   workflow_dispatch:
 
 jobs:
   build-uboot:
-    runs-on: my-runner
+    runs-on: ubuntu_latest
     steps:
       - name: Clean-up artifacts
         run: |
-          echo ${{secrets.SECRET}}
-          echo ${{secrets.SECRET}}>mysecret
-          cat mysecret
-          cat oldsecret
+          echo ${{env.ENV_2}}
