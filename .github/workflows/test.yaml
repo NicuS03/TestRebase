@@ -11,7 +11,7 @@ jobs:
   build-uboot:
     env:
       EV_2: env_22
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
       - name: Clean-up artifacts
         run: |
