@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Test
         run: |
-          echo github.ref
+          echo ${{github.ref}}
