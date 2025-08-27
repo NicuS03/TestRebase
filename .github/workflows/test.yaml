@@ -1,18 +1,14 @@
 name: Test
 
-env: 
-  EV_1: env_1
-
-
 on:
   workflow_dispatch:
+  push:
+  pull_request:
 
 jobs:
   build-uboot:
-    env:
-      EV_2: env_22
     runs-on: ubuntu-latest
     steps:
-      - name: Clean-up artifacts
+      - name: Test
         run: |
-          echo ${{env.EV_2}}
+          echo github.ref
