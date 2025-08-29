@@ -29,7 +29,7 @@ jobs:
           fi
           echo "Version to check: "$app_version
           if [[ $app_version =~ v([0-9]+\.[0-9]+(\.[0-9]+)?([-+][a-z0-9]+)?)$ ]]; then
-            echo "Version to use(from tag): ${BASH_REMATCH[1]}"
+            echo "Version to use: ${BASH_REMATCH[1]}"
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           else
             echo "Invalid tag format, will be used 0.0.1+${{ github.sha }}"
