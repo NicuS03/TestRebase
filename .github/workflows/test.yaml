@@ -3,12 +3,19 @@ name: Test
 on:
   workflow_dispatch:
   push:
-  pull_request:
+    tags:
+      - v*
+  
 
 jobs:
   build-uboot:
     runs-on: ubuntu-latest
     steps:
-      - name: Test
+      - name: Test No Tag
+        run: |
+          echo ${{github.ref_type}}
+      - name: Test Tag
+        if: github.ref_type == 'tag'
         run: |
           echo ${{github.ref}}
+    
