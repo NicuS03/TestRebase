@@ -20,7 +20,7 @@ jobs:
         working-directory: something-file
         run: |
           app_version=""
-          if [["${{github.ref_type}}"=="tag"]]; then
+          if [[ "${{github.ref_type}}" == "tag" ]]; then
               app_version=${{github.ref}}
           else
             git fetch --tags
