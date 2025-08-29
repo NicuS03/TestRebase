@@ -34,7 +34,6 @@ jobs:
             echo "Invalid tag format, will be used 0.0.1+${{ github.sha }}"
           fi
       - name: Test Tag
-        if: github.ref_type == 'tag'
         run: |
           echo ${{steps.get_version.outputs.version}}
     
