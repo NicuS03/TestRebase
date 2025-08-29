@@ -28,7 +28,7 @@ jobs:
             app_version=$latest_tag
           fi
           echo "Version to check: "$app_version
-          if [[ app_version =~ v([0-9]+\.[0-9]+(\.[0-9]+)?([-+][a-z0-9]+)?)$ ]]; then
+          if [[ $app_version =~ v([0-9]+\.[0-9]+(\.[0-9]+)?([-+][a-z0-9]+)?)$ ]]; then
             echo "Version to use(from tag): ${BASH_REMATCH[1]}"
             echo "version=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
           else
