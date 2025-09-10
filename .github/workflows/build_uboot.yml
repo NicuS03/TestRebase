@@ -148,7 +148,8 @@ jobs:
         run: |
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
-          scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i secure_file -r ${{env.ARTIFACTS_NAME}}/* sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/
+          echo "Files to be uploaded:" && cd ${{env.ARTIFACTS_NAME}} && ls 
+          
           
           
           
