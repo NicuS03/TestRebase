@@ -42,7 +42,7 @@ jobs:
           repository: analogdevicesinc/u-boot-xlnx
           ref: master
           path: ${{env.uboot_checkout}}
-      - name: Create intermediate artifacts
+      - name: Create artifacts folder
         run: |
           rm -rf ${{env.ARTIFACTS_NAME}}
           mkdir -p ${{env.ARTIFACTS_NAME}}
