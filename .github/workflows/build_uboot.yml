@@ -66,12 +66,14 @@ jobs:
           done
 
       - name: Install dependencies
+        if: false
         run: |
           sudo apt install uuid-dev
           sudo apt install libgnutls28-dev 
           sudo apt install device-tree-compiler
 
       - name: Run 64 bit configurations
+        if: false
         working-directory: ${{env.uboot_checkout}}
         env:
           ARCH: aarch64
@@ -146,7 +148,7 @@ jobs:
           if-no-files-found: error
       - name: SwDownlaod upload
         run: |
-          folder_version=${{ replace(inputs.vivado_version , '.', '_') }}
+          folder_version=${${{inputs.vivado_version}}//./_}
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
           echo "Files to be uploaded to boot_partition_files/$folder_version :" && cd ${{env.ARTIFACTS_NAME}} && ls 
