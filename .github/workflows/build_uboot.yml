@@ -145,11 +145,10 @@ jobs:
           path: ${{env.ARTIFACTS_NAME}}/*
           if-no-files-found: error
       - name: SwDownlaod upload
-        working-directory: ${{env.ARTIFACTS_NAME}}
         run: |
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
-          scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i $key -r * sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/
+          scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i secure_file -r ${{env.ARTIFACTS_NAME}}/* sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/
           
           
           
