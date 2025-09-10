@@ -145,9 +145,11 @@ jobs:
           path: ${{env.ARTIFACTS_NAME}}/*
           if-no-files-found: error
       - name: SwDownlaod upload
+        working-directory: ${{env.ARTIFACTS_NAME}}
         run: |
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
+  
           ls
           
           
