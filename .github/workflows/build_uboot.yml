@@ -148,9 +148,10 @@ jobs:
           if-no-files-found: error
       - name: SwDownlaod upload
         run: |
-          folder_version=${${{inputs.vivado_version}}//./_}
+          folder_version="${${{inputs.vivado_version}}//./_}"
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
+          echo $folder_version
           echo "Files to be uploaded to boot_partition_files/$folder_version :" 
           cd ${{env.ARTIFACTS_NAME}} && ls 
           
