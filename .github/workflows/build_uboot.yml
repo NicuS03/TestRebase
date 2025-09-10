@@ -147,7 +147,9 @@ jobs:
       - name: SwDownlaod upload
         run: |
           echo "${{secrets.RSA}}" >secure_file
-          scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -i secure_file -r /home/vsts/work/1/a/* $MAPPED_VAR
+          chmod 600 secure_file
+          ls
+          
           
 #  upload_artifacts:
 #    runs-on: internal_runner
