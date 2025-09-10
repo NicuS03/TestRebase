@@ -147,8 +147,10 @@ jobs:
           path: ${{env.ARTIFACTS_NAME}}/*
           if-no-files-found: error
       - name: SwDownlaod upload
+        env:
+          VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
-          folder_version=${{ replace(inputs.vivado_version, '.', '_') }}
+          folder_version=${VIVADO_VERSION//./_}
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
           echo $folder_version
