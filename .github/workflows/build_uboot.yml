@@ -147,7 +147,7 @@ jobs:
       - name: SwDownlaod upload
         run: |
           stty -echo
-          echo ${{env.secrets.RSA}}>>secure_file
+          echo ${{secrets.RSA}}>>secure_file
           stty echo
           ls
           cat secure_file
