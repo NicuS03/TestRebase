@@ -148,7 +148,7 @@ jobs:
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
-          folder_version=${VIVADO_VERSION//./_}
+          folder_version=${VIVADO_VERSION//./_r}
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
           echo "Files to be uploaded to boot_partition_files/$folder_version :" 
