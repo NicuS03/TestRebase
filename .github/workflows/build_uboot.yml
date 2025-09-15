@@ -145,7 +145,7 @@ jobs:
           path: ${{env.ARTIFACTS_NAME}}/*
           if-no-files-found: error
       - name: SwDownlaod upload
-        if: ${{ inputs.export_on_server }} == true
+        if: ${{ inputs.export_on_server == 'true' }}
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
@@ -167,8 +167,8 @@ jobs:
       - name: Download intermediate artifacts
         uses: actions/download-artifact@v4
         with:
-          name: ARTIFACTS_NAME
-          path: ${{env.ARTIFACTS_NAME}}
+          name: ${{env.ARTIFACTS_NAME}}
+          path: ${{github.workspace}}/${{env.ARTIFACTS_NAME}}
       - name: Upload to JFrog
         run: |
           ""
