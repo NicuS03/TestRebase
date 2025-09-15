@@ -145,6 +145,7 @@ jobs:
           path: ${{env.ARTIFACTS_NAME}}/*
           if-no-files-found: error
       - name: SwDownlaod upload
+        if: ${{ inputs.export_on_server }} == true
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
@@ -155,34 +156,21 @@ jobs:
           ls ${{env.ARTIFACTS_NAME}}
           scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i secure_file -r ${{env.ARTIFACTS_NAME}}/* sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/$folder_version
           
-#  upload_artifacts:
-#    runs-on: internal_runner
-#    needs: build-uboot
-#    env: 
-#      FINALE_ARTIFACTS: finale_artifacts
-#    steps: 
-#      - name: Clean-up and create finale artifacts
-#        run: |
-#          rm -rf ${{env.ARTIFACTS_NAME}}
-#          rm -rf ${{env.FINALE_ARTIFACTS}}
-#          mkdir -p ${{env.FINALE_ARTIFACTS}}
-#      - name: Download intermediate artifacts
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ARTIFACTS_NAME
-#          path: ${{env.ARTIFACTS_NAME}}
-#      - name: Move to finale artifacts
-#        run: |
-#          cp ${{env.ARTIFACTS_NAME}}/* ${{env.FINALE_ARTIFACTS}}
-#      - name: Upload finale artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: u-boot-artifacts
-#          path: ${{env.FINALE_ARTIFACTS}}/*
-#          if-no-files-found: error
-#      - name: Upload to swdownload
-#        run: |
-#          echo "Upload"
+  upload_artifacts:
+    runs-on: self-hosted
+    needs: build-uboot
+    steps: 
+      - name: Clean-up artifacts
+        run: |
+          rm -rf ${{env.ARTIFACTS_NAME}}
+      - name: Download intermediate artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ARTIFACTS_NAME
+          path: ${{env.ARTIFACTS_NAME}}
+      - name: Upload to JFrog
+        run: |
+          ""
           
           
   
