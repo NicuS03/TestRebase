@@ -159,6 +159,7 @@ jobs:
   upload_artifacts:
     runs-on: self-hosted
     needs: build-uboot
+    if: ${{ inputs.export_on_server }} == true
     steps: 
       - name: Clean-up artifacts
         run: |
