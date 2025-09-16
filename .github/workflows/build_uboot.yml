@@ -157,7 +157,7 @@ jobs:
           scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i secure_file -r ${{env.ARTIFACTS_NAME}}/* sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/$folder_version
       - name: CloudSmith upload
         env: 
-          CLOUDSMITH_REPO: u-boot-test
+          CLOUDSMITH_REPO: u-boot-test2
         if: ${{ inputs.export_on_server }}
         run: |
           python -m pip install cloudsmith-cli
