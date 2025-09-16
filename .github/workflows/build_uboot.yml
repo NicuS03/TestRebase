@@ -183,9 +183,17 @@ jobs:
         with:
           name: ${{env.ARTIFACTS_NAME}}
           path: ${{github.workspace}}/${{env.ARTIFACTS_NAME}}
+      - uses: jfrog/setup-jfrog-cli@v4
+        env: 
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       - name: Upload to JFrog
+        env: 
+          BASE_LOCATION: sdg-generic-development/u-boot/tbd
+          VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
-          echo Upload
+          vivado_version=${VIVADO_VERSION//./_r}
+          jf rt u ${{env.ARTIFACTS_NAME}}/* ${{env.BASE_LOCATION}}/$vivado_version
           
           
   
