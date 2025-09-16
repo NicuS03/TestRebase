@@ -158,12 +158,13 @@ jobs:
       - name: CloudSmith upload
         env: 
           CLOUDSMITH_REPO: u-boot-test2
+          VIVADO_VERSION: ${{inputs.vivado_version}}
         if: ${{ inputs.export_on_server }}
         run: |
           python -m pip install cloudsmith-cli
-          
+          vivado_version=${VIVADO_VERSION//./_r}
           for f in ${{env.ARTIFACTS_NAME}}/u-boot_*.elf; do 
-            mv "$f" "${f/u-boot_/u-boot_<some_text>_}"
+            mv "$f" "${f/u-boot/u-boot_$vivado_version}"
           done
           for x in ${{env.ARTIFACTS_NAME}}/*; do cloudsmith push raw -k ${{secrets.CLOUDSMITH_TOKEN}} adi/${{env.CLOUDSMITH_REPO}} $x; done
           
