@@ -193,7 +193,9 @@ jobs:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
           vivado_version=${VIVADO_VERSION//./_r}
-          jf rt u "${{env.ARTIFACTS_NAME}}/*" ${{env.BASE_LOCATION}}/$vivado_version/
+          pushd ${{env.ARTIFACTS_NAME}}
+          for x in *; do jf rt u $x ${{env.BASE_LOCATION}}/$vivado_version/
+          popd
           
           
   
