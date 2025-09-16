@@ -163,10 +163,12 @@ jobs:
         run: |
           python -m pip install cloudsmith-cli
           vivado_version=${VIVADO_VERSION//./_r}
-          for f in ${{env.ARTIFACTS_NAME}}/u-boot_*.elf; do 
+          pushd ${{env.ARTIFACTS_NAME}}
+          for f in u-boot_*.elf; do 
             mv "$f" "${f/u-boot/u-boot_$vivado_version}"
           done
-          for x in ${{env.ARTIFACTS_NAME}}/*; do cloudsmith push raw -k ${{secrets.CLOUDSMITH_TOKEN}} adi/${{env.CLOUDSMITH_REPO}} $x; done
+          for x in *; do cloudsmith push raw -k ${{secrets.CLOUDSMITH_TOKEN}} adi/${{env.CLOUDSMITH_REPO}} $x; done
+          popd
           
   upload_artifacts:
     runs-on: self-hosted
