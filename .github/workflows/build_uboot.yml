@@ -194,7 +194,7 @@ jobs:
         run: |
           vivado_version=${VIVADO_VERSION//./_r}
           pushd ${{env.ARTIFACTS_NAME}}
-          for x in *; do jf rt u $x ${{env.BASE_LOCATION}}/$vivado_version/
+          for x in *; do jf rt u $x ${{env.BASE_LOCATION}}/$vivado_version/; done 
           popd
           
           
