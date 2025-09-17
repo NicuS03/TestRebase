@@ -190,7 +190,7 @@ jobs:
         run: |
           vivado_version=${VIVADO_VERSION//./_r}
           pushd ${{env.ARTIFACTS_NAME}}
-          for x in *; do curl -X PUT -u ${{secrets.JFROG_USERNAME}}:${{ secrets.JF_ACCESS_TOKEN }} ${{ secrets.JF_URL }}/${{env.BASE_LOCATION}}/$x --data-binary @$x; done
+          for x in *; do curl -X PUT -u ${{secrets.JFROG_AUTH }} ${{ secrets.JF_URL }}/${{env.BASE_LOCATION}}/$x --data-binary @$x; done
           popd
           
           
