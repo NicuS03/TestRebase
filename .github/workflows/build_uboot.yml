@@ -17,6 +17,11 @@ on:
         type: boolean
         default: false
 
+permissions:
+  id-token: write
+  contents: write
+  actions: read
+
 env: 
   GCC_BASE_FOLDER: /usr/bin
   LINARO_FOLDER: /opt/linaro
@@ -123,6 +128,10 @@ jobs:
       
 
   upload_artifacts:
+    permissions:
+      id-token: write
+      contents: write
+      actions: read
     runs-on: ubuntu-latest
     needs: build-uboot
     if: ${{ inputs.export_on_server }}
