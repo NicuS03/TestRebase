@@ -153,7 +153,7 @@ jobs:
           folder_version=${VIVADO_VERSION//./_r}
           echo "${{secrets.RSA}}" >secure_file
           chmod 600 secure_file
-          echo "Files to be uploaded to boot_partition_files/$folder_version :" 
+          echo "Files to be uploaded to boot_partition_files/uboot/$folder_version :" 
           ls ${{env.ARTIFACTS_NAME}}
           scp -2 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o HostKeyAlgorithms=+ssh-dss -v -i secure_file -r ${{env.ARTIFACTS_NAME}}/* sshacs@analog.ssh.upload.akamai.com:/336936/cse/boot_partition_files/uboot/$folder_version
 
