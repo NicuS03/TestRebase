@@ -6,9 +6,7 @@ permissions:
 
 # Controls when the workflow will run
 on:
-  push:
-    branches:
-      - test/nicus_tbd
+  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
