@@ -26,7 +26,7 @@ jobs:
         uses: cloudsmith-io/cloudsmith-cli-action@dbeb7b69746286974aab4a39a9f369a4fd0d5334 #v1.0.5
         with:
           oidc-namespace: adi
-          oidc-service-slug: nicu-siderias
+          oidc-service-slug: sw-test-rw
       
       - name: Push package to Cloudsmith (Non-Windows)
         run: |
