@@ -1,6 +1,3 @@
-
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
 permissions:
@@ -9,7 +6,9 @@ permissions:
 
 # Controls when the workflow will run
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - test/nicus_tbd
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
