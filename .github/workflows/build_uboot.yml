@@ -184,7 +184,7 @@ jobs:
               -T $4 \
               -H "X-Api-Key: $1" \
               -H "Content-Sha256: $(shasum -a256 $4 | cut -f1 -d' ')" \
-              https://upload.cloudsmith.io/$2/$3/$4 | jq -r .identifier)`
+              https://upload.cloudsmith.io/$2/$3/$4 | jq -r .identifier)
             echo $package_file
           }
 
@@ -196,9 +196,7 @@ jobs:
               -H "X-Api-Key: $1" \
               -d "{\"package_file\":\"$4\", \
                    \"republish\":\"true\", \
-                   \"name\":\"$5\", \
-                   \"tags\": \"$6\", \
-                   \"version\":\"$7\"}" \
+                   \"tags\": \"$5\", \
               https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/
           }
 
@@ -227,8 +225,6 @@ jobs:
             cs-package-store-raw ${{ env.CLOUDSMITH_API_KEY }} \
                                  ${{ env.CLOUDSMITH_NAMESPACE }} \
                                  ${{ env.CLOUDSMITH_REPOSITORY }} \
-                                 $package_file \
-                                 $file \
-                                 "$tags_" \
-                                 ${GITHUB_SHA:0:12}
+                                 "$package_file" \
+                                 "$tags_" 
           done
