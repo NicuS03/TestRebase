@@ -31,6 +31,7 @@ env:
 
 jobs:
   build-uboot:
+    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Install GCC 
@@ -147,6 +148,7 @@ jobs:
           path: ${{github.workspace}}/${{env.ARTIFACTS_NAME}}
 
       - name: SwDownlaod upload
+        if: false
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
@@ -178,6 +180,7 @@ jobs:
           CLOUDSMITH_REPOSITORY: u-boot-test2
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
+          touch test.sh
           cs-package-upload()
           {
             package_file=$(curl -sfL \
