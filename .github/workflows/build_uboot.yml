@@ -196,8 +196,8 @@ jobs:
               -H "Content-Type: application/json" \
               -H "X-Api-Key: $1" \
               -d "{\"package_file\":\"$4\", \
-                   \"republish\":\"true\", \
-              https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/"
+                   \"republish\":\"true\"}" \
+              https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/
           }
 
           cd ${{env.ARTIFACTS_NAME}}
