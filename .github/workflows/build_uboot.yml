@@ -193,7 +193,8 @@ jobs:
             echo $package_file
           }
 
-          cs-package-store-raw () {
+          cs-package-store-raw () 
+          {
             curl -sfL \
               -X POST \
               -H "Accept: application/json" \
@@ -202,7 +203,7 @@ jobs:
               -d "{\"package_file\":\"$4\", \
                    \"republish\":\"true\", \
                    \"tags\": \"$5\", \
-              https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/
+              https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/"
           }
 
           # push: refs/heads/<branch>
@@ -226,6 +227,12 @@ jobs:
                                 ${{ env.CLOUDSMITH_REPOSITORY }} \
                                 "$file"
             )
+            
+            cs-package-store-raw ${{ env.CLOUDSMITH_API_KEY }} \
+                                 ${{ env.CLOUDSMITH_NAMESPACE }} \
+                                 ${{ env.CLOUDSMITH_REPOSITORY }} \
+                                 $package_file \
+                                 "$tags_" 
 
             
           done
