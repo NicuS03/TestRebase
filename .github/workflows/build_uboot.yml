@@ -216,5 +216,5 @@ jobs:
             cs-package-store-raw ${{ env.CLOUDSMITH_API_KEY }} \
                                  ${{ env.CLOUDSMITH_NAMESPACE }} \
                                  ${{ env.CLOUDSMITH_REPOSITORY }} \
-                                 $package_file \
+                                 $package_file
           done
