@@ -178,7 +178,6 @@ jobs:
           CLOUDSMITH_REPOSITORY: u-boot-test2
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
-          touch test.sh
           cs-package-upload()
           {
             package_file=$(curl -sfL \
