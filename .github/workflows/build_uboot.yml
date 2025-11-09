@@ -227,9 +227,5 @@ jobs:
                                 "$file"
             )
 
-            #cs-package-store-raw ${{ env.CLOUDSMITH_API_KEY }} \
-            #                     ${{ env.CLOUDSMITH_NAMESPACE }} \
-            #                     ${{ env.CLOUDSMITH_REPOSITORY }} \
-            #                     "$package_file" \
-            #                     "$tags_" 
+            
           done
