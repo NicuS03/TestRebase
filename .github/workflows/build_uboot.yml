@@ -197,18 +197,8 @@ jobs:
               -H "X-Api-Key: $1" \
               -d "{\"package_file\":\"$4\", \
                    \"republish\":\"true\", \
-                   \"tags\": \"$5\", \
               https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/"
           }
-
-          # push: refs/heads/<branch>
-          # tag || release: refs/tags/<tag>
-          # pull_request: refs/pull/<id>/merge
-          tags_="${{ github.ref }}, on/${{ github.event_name }}"
-          [[ "${{ github.ref }}" == refs/pull/* ]] && \
-            tags_+=", refs/heads/${{ github.head_ref }}, refs/base/${{ github.base_ref }}"
-
-          [ -z "$( ls -A 'dist' )" ] && exit
 
           cd ${{env.ARTIFACTS_NAME}}
           for f in u-boot_*.elf; do 
@@ -227,7 +217,4 @@ jobs:
                                  ${{ env.CLOUDSMITH_NAMESPACE }} \
                                  ${{ env.CLOUDSMITH_REPOSITORY }} \
                                  $package_file \
-                                 "$tags_" 
-
-            
           done
