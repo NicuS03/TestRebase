@@ -187,5 +187,5 @@ jobs:
           
           for file in * ; do
             echo "Upload: $file"
-            do cloudsmith push raw -k ${{env.CLOUDSMITH_API_KEY}} adi/${{env.CLOUDSMITH_REPO}} $x;
+            cloudsmith push raw --republish -k ${{env.CLOUDSMITH_API_KEY}} adi/${{env.CLOUDSMITH_REPO}} $x;
           done
