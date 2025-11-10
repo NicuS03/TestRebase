@@ -186,9 +186,9 @@ jobs:
           vivado_version=${VIVADO_VERSION//./_r}
           cd ${{env.ARTIFACTS_NAME}}
           touch test.sh
-          for f in u-boot_*.elf; do 
-            mv "$f" "${f/u-boot/u-boot_$vivado_version}"
-          done
+          #for f in u-boot_*.elf; do 
+          #  mv "$f" "${f/u-boot/u-boot_$vivado_version}"
+          #done
           
           for file in * ; do
             echo "Upload: $file"
