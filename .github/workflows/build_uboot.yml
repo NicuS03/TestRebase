@@ -32,6 +32,7 @@ env:
 jobs:
   build-uboot:
     runs-on: ubuntu-latest
+    if: false
     steps:
       - name: Install GCC 
         run: |
@@ -142,11 +143,13 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        if: false
         with:
           name: ${{env.ARTIFACTS_NAME}}
           path: ${{github.workspace}}/${{env.ARTIFACTS_NAME}}
 
       - name: SwDownlaod upload
+        if: false
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
@@ -178,14 +181,16 @@ jobs:
           CLOUDSMITH_REPOSITORY: u-boot-test2
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
+          mkdir ${{env.ARTIFACTS_NAME}}
           python -m pip install cloudsmith-cli
           vivado_version=${VIVADO_VERSION//./_r}
           cd ${{env.ARTIFACTS_NAME}}
+          touch test.sh
           for f in u-boot_*.elf; do 
             mv "$f" "${f/u-boot/u-boot_$vivado_version}"
           done
           
           for file in * ; do
             echo "Upload: $file"
-            cloudsmith push raw --republish -k ${{env.CLOUDSMITH_API_KEY}} adi/${{env.CLOUDSMITH_REPOSITORY}} $x;
+            cloudsmith push raw --republish -k ${{env.CLOUDSMITH_API_KEY}} adi/${{env.CLOUDSMITH_REPOSITORY}} $file;
           done
