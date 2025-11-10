@@ -178,44 +178,14 @@ jobs:
           CLOUDSMITH_REPOSITORY: u-boot-test2
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
-          cs-package-upload()
-          {
-            package_file=$(curl -sfL \
-              -T $4 \
-              -H "X-Api-Key: $1" \
-              -H "Content-Sha256: $(shasum -a256 $4 | cut -f1 -d' ')" \
-              https://upload.cloudsmith.io/$2/$3/$4 | jq -r .identifier)
-          }
-
-          cs-package-store-raw () 
-          {
-            curl -sfL \
-              -X POST \
-              -H "Accept: application/json" \
-              -H "Content-Type: application/json" \
-              -H "X-Api-Key: $1" \
-              -d "{\"package_file\":\"$4\", \
-                   \"republish\":\"true\"}" \
-              https://api.cloudsmith.com/v1/packages/$2/$3/upload/raw/
-          }
-
-          cd ${{env.ARTIFACTS_NAME}}
+          python -m pip install cloudsmith-cli
           vivado_version=${VIVADO_VERSION//./_r}
+          cd ${{env.ARTIFACTS_NAME}}
           for f in u-boot_*.elf; do 
             mv "$f" "${f/u-boot/u-boot_$vivado_version}"
           done
           
           for file in * ; do
             echo "Upload: $file"
-            package_file=$(
-              cs-package-upload ${{ env.CLOUDSMITH_API_KEY }} \
-                                ${{ env.CLOUDSMITH_NAMESPACE }} \
-                                ${{ env.CLOUDSMITH_REPOSITORY }} \
-                                "$file"
-            )
-            
-            cs-package-store-raw ${{ env.CLOUDSMITH_API_KEY }} \
-                                 ${{ env.CLOUDSMITH_NAMESPACE }} \
-                                 ${{ env.CLOUDSMITH_REPOSITORY }} \
-                                 $package_file
+            do cloudsmith push raw -k ${{env.CLOUDSMITH_API_KEY}} adi/${{env.CLOUDSMITH_REPO}} $x;
           done
