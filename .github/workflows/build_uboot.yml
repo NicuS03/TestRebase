@@ -185,7 +185,6 @@ jobs:
               -H "X-Api-Key: $1" \
               -H "Content-Sha256: $(shasum -a256 $4 | cut -f1 -d' ')" \
               https://upload.cloudsmith.io/$2/$3/$4 | jq -r .identifier)
-            echo $package_file
           }
 
           cs-package-store-raw () 
@@ -201,11 +200,13 @@ jobs:
           }
 
           cd ${{env.ARTIFACTS_NAME}}
+          vivado_version=${VIVADO_VERSION//./_r}
           for f in u-boot_*.elf; do 
             mv "$f" "${f/u-boot/u-boot_$vivado_version}"
           done
+          
           for file in * ; do
-            echo "$file"
+            echo "Upload: $file"
             package_file=$(
               cs-package-upload ${{ env.CLOUDSMITH_API_KEY }} \
                                 ${{ env.CLOUDSMITH_NAMESPACE }} \
