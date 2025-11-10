@@ -32,7 +32,6 @@ env:
 jobs:
   build-uboot:
     runs-on: ubuntu-latest
-    if: false
     steps:
       - name: Install GCC 
         run: |
@@ -134,7 +133,7 @@ jobs:
       contents: write
       actions: read
     runs-on: ubuntu-latest
-    #needs: build-uboot
+    needs: build-uboot
     if: ${{ inputs.export_on_server }}
     steps: 
       - name: Clean-up artifacts
@@ -143,13 +142,11 @@ jobs:
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
-        if: false
         with:
           name: ${{env.ARTIFACTS_NAME}}
           path: ${{github.workspace}}/${{env.ARTIFACTS_NAME}}
 
       - name: SwDownlaod upload
-        if: false
         env:
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
@@ -186,9 +183,9 @@ jobs:
           vivado_version=${VIVADO_VERSION//./_r}
           cd ${{env.ARTIFACTS_NAME}}
           touch test.sh
-          #for f in u-boot_*.elf; do 
-          #  mv "$f" "${f/u-boot/u-boot_$vivado_version}"
-          #done
+          for f in u-boot_*.elf; do 
+            mv "$f" "${f/u-boot/u-boot_$vivado_version}"
+          done
           
           for file in * ; do
             echo "Upload: $file"
