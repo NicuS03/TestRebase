@@ -37,7 +37,7 @@ jobs:
         run: |
           wget https://developer.arm.com/-/media/Files/downloads/gnu-a/8.2-2018.08/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tar.xz
           sudo mkdir -p ${{env.CUSTOM_GCC_FOLDER}}
-          sudo tar -xf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2 -C ${{env.CUSTOM_GCC_FOLDER}}
+          sudo tar -xf gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tar.xz -C ${{env.CUSTOM_GCC_FOLDER}}
           
           sudo apt update
           sudo apt install -y gcc-aarch64-linux-gnu
@@ -55,7 +55,7 @@ jobs:
       - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_CUSTOM_GCC_FOLDER: ${{env.CUSTOM_GCC_FOLDER}}/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2/bin
+          GCC_CUSTOM_GCC_FOLDER: ${{env.CUSTOM_GCC_FOLDER}}/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tar.xz/bin
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
