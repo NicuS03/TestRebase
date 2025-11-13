@@ -57,7 +57,7 @@ jobs:
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
-          export CROSS_COMPILE=${{env.GCC_LINARO_FOLDER}}/arm-linux-gnueabihf-
+          export CROSS_COMPILE=${{env.GCC_BASE_FOLDER}}/arm-linux-gnueabihf-
           export ARCH=${{env.ARCH}}
 
           for defcfg in ${{env.X32_DEFCONFIGS}}; do
