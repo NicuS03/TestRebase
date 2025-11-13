@@ -35,7 +35,7 @@ jobs:
     steps:
       - name: Install GCC 
         run: |
-          wget https://developer.arm.com/-/media/files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
+          wget https://developer.arm.com/-/media/Files/downloads/gnu-a/8.2-2018.08/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tar.xz
           sudo mkdir -p ${{env.CUSTOM_GCC_FOLDER}}
           sudo tar -xf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2 -C ${{env.CUSTOM_GCC_FOLDER}}
           
