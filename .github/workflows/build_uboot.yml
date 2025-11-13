@@ -34,12 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install GCC 
-        run: |
-          wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
-          sudo mkdir -p ${{env.LINARO_FOLDER}}
-          sudo tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz -C /opt/linaro
-          
+        run: |       
           sudo apt update
+          sudo apt install -y gcc-arm-linux-gnueabihf
           sudo apt install -y gcc-aarch64-linux-gnu
           
       - name: Checkout
