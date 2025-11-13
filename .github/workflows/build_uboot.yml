@@ -24,7 +24,7 @@ permissions:
 
 env: 
   GCC_BASE_FOLDER: /usr/bin
-  LINARO_FOLDER: /opt/linaro
+  CUSTOM_GCC_FOLDER: /opt/custom-gcc
   uboot_checkout: u-boot-xlnx
   ARTIFACTS_NAME: u-boot-artifacts
   CLOUDSMITH_NAMESPACE: adi
@@ -35,9 +35,9 @@ jobs:
     steps:
       - name: Install GCC 
         run: |
-          wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
-          sudo mkdir -p ${{env.LINARO_FOLDER}}
-          sudo tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz -C /opt/linaro
+          wgethttps://developer.arm.com/-/media/files/downloads/gnu-rm/7-2018q2/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2
+          sudo mkdir -p ${{env.CUSTOM_GCC_FOLDER}}
+          sudo tar -xf gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2 -C ${{env.CUSTOM_GCC_FOLDER}}
           
           sudo apt update
           sudo apt install -y gcc-aarch64-linux-gnu
@@ -55,11 +55,11 @@ jobs:
       - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_LINARO_FOLDER: ${{env.LINARO_FOLDER}}//gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf/bin
+          GCC_CUSTOM_GCC_FOLDER: ${{env.CUSTOM_GCC_FOLDER}}/gcc-arm-none-eabi-7-2018-q2-update-linux.tar.bz2/bin
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
-          export CROSS_COMPILE=${{env.GCC_LINARO_FOLDER}}/arm-linux-gnueabihf-
+          export CROSS_COMPILE=${{env.GCC_CUSTOM_GCC_FOLDER}}/arm-linux-gnueabihf-
           export ARCH=${{env.ARCH}}
 
           for defcfg in ${{env.X32_DEFCONFIGS}}; do
@@ -88,7 +88,7 @@ jobs:
           defcfg=adi_zynqmp_adrv9009_zu11eg_adrv2crr_fmc_defconfig
           make distclean
           make $defcfg
-          make -j2
+          make
           echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
           cp u-boot "../${{env.ARTIFACTS_NAME}}/u-boot_${defcfg//_defconfig/}.elf"
 
