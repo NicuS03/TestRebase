@@ -55,7 +55,7 @@ jobs:
       - name: Run 32 bit configurations
         working-directory: ${{env.uboot_checkout}}
         env:
-          GCC_CUSTOM_GCC_FOLDER: ${{env.CUSTOM_GCC_FOLDER}}/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf.tar.xz/bin
+          GCC_CUSTOM_GCC_FOLDER: ${{env.CUSTOM_GCC_FOLDER}}/gcc-arm-8.2-2018.08-x86_64-arm-linux-gnueabihf/bin
           ARCH: arm
           X32_DEFCONFIGS: "${{ inputs.x32_defconfigs }}"
         run: |
