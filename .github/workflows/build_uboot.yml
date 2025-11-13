@@ -175,7 +175,7 @@ jobs:
       - name: Cloudsmith upload assets
         if: ${{ env.CLOUDSMITH_API_KEY != '' }}
         env: 
-          CLOUDSMITH_REPOSITORY: u-boot-test2
+          CLOUDSMITH_REPOSITORY: u-boot
           VIVADO_VERSION: ${{inputs.vivado_version}}
         run: |
           python -m pip install cloudsmith-cli
