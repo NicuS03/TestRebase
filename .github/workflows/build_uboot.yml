@@ -63,6 +63,7 @@ jobs:
           for defcfg in ${{env.X32_DEFCONFIGS}}; do
              make distclean
              make $defcfg
+             make
              echo -e "$defcfg done. Output file is: u-boot_${defcfg//_defconfig/}.elf"
              cp u-boot "../${{env.ARTIFACTS_NAME}}/u-boot_${defcfg//_defconfig/}.elf"
           done
