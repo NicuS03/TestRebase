@@ -16,7 +16,7 @@ jobs:
         run: |
           apt update
           apt install -y apt-transport-https curl
-          
+          echo "#########################START" 
           curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | -E bash
           apt-get update
           apt-get install libad9361
