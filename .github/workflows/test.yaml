@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Test Cloudsmith
         run: |
-          curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | sudo -E bash
-          sudo apt-get update
-          sudo apt-get install libad9361
+          apt install apt-transport-https curl
+          
+          curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | -E bash
+          apt-get update
+          apt-get install libad9361
