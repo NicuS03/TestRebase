@@ -1,8 +1,5 @@
 name: CI
 
-permissions:
-  contents: read
-  id-token: write
 
 # Controls when the workflow will run
 on:
@@ -12,14 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04-arm
+    container:
+      image: arm64v8/debian:trixie
     steps:
-      - name: Start persistent container
-        run: |
-          docker run -d \
-            arm64 \
-            --name test-arm64
-      
-      - name: Push package to Cloudsmith (Non-Windows)
+      - name: Test Cloudsmith
         run: |
           curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | sudo -E bash
           sudo apt-get update
