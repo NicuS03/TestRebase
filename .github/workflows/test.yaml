@@ -14,7 +14,8 @@ jobs:
     steps:
       - name: Test Cloudsmith
         run: |
-          apt install apt-transport-https curl
+          apt install apt-transport-https
+          apt install curl
           
           curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | -E bash
           apt-get update
