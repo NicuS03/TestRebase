@@ -10,24 +10,17 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    runs-on: ubuntu-24.04-arm
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
-      - name: Generate Cloudsmith OIDC Token
-        uses: cloudsmith-io/cloudsmith-cli-action@dbeb7b69746286974aab4a39a9f369a4fd0d5334 #v1.0.5
-        with:
-          oidc-namespace: adi
-          oidc-service-slug: "svc-mead-systemc-rw"
+      - name: Start persistent container
+        run: |
+          docker run -d \
+            arm64 \
+            --name test-arm64
       
       - name: Push package to Cloudsmith (Non-Windows)
         run: |
-          for file in *; do
-            echo "Processing file: $file"
-            cloudsmith push raw adi/u-boot-test2 $file
-          done
+          curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | sudo -E bash
+          sudo apt-get update
+          sudo apt-get install libad9361
