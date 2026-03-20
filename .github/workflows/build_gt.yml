@@ -1,0 +1,71 @@
+name: Build GT
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build debian'
+        required: true
+        default: '1.0.0'
+
+env:
+  PACKAGE_NAME: gt
+  APP_NAME: ${{env.PACKAGE_NAME}}-${{ github.event.inputs.version }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    matrix:
+      include:
+        - docker_image: arm64v8/debian:trixie
+          distro: debian13
+          architecture: arm64
+          platform_flag: ""
+        - docker_image: arm32v7/debian:trixie
+          distro: debian13
+          architecture: armhf
+          platform_flag: "--platform linux/arm/v7"
+    steps:
+      - name: Download GT source code
+        use: actions/checkout@v6
+        with:
+          repository: https://github.com/linux-usb-gadgets/gt
+          path: ${{env.APP_NAME}}
+      
+      - name: Checkout gt scripts
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            gt
+      
+      - name: Test
+        run: ls -al
+
+      - name: Start persistent container
+        run: |
+          docker run -d \
+              ${{matrix.platform_flag}} \
+              --name ${{matrix.distro}}-${{matrix.architecture}} \
+              -v "$GITHUB_WORKSPACE/${{env.APP_NAME}}:/workspace/${{env.APP_NAME}}" \
+              -w /workspace/${{env.APP_NAME}} \
+              ${{matrix.docker_image}} tail -f /dev/null
+
+      - name: Install dependecy
+        run: |
+          docker exec ${{matrix.distro}}-${{matrix.architecture}} sh -c "sudo apt-get install debhelper devscripts build-essential wget cmake libusbgx-dev libconfig-dev libglib2.0-dev"
+
+      - name: Build GT
+        run: |
+          docker exec ${{matrix.distro}}-${{matrix.architecture}} sh -c "gt/build-gt-deb.sh ${{env.PACKAGE_NAME}} ${{github.event.inputs.version}} ${{matrix.architecture}}"
+
+      - name: Copy debian artifacts from container to host
+        run: |
+          docker cp ${{matrix.distro}}-${{matrix.architecture}}:/workspace/. ./artifacts/
+          ls -la ./artifacts/
+
+      - name: Upload GT debian package
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.APP_NAME }}-${{ matrix.docker_image }}
+          
+          
