@@ -52,8 +52,6 @@ jobs:
         run: |
           mv repo-scripts/CI/gt_deb_scripts $GITHUB_WORKSPACE/gt_deb_scripts
           rm -rf repo-scripts
-          ls 
-          ls -la $GITHUB_WORKSPACE/gt_deb_scripts
 
       - name: Start persistent container
         run: |

@@ -8,16 +8,24 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    runs-on: ubuntu-24.04-arm
-    container:
-      image: arm64v8/debian:trixie
+    runs-on: ubuntu-latest
     steps:
-      - name: Test Cloudsmith
+      - uses: actions/checkout@v6
+        with:
+          set-safe-directory: 'true'
+          fetch-depth: '0'
+          repository: analogdevicesinc/scopy
+      - name: Build Debian package
+        shell: bash
         run: |
-          apt update
-          apt install -y apt-transport-https curl
-          echo "#########################START" 
-          curl -1sLf 'https://dl.cloudsmith.io/public/adi/kuiper/setup.deb.sh' | bash
-          echo "#########################STOP"
-          apt-get update
-          apt-get install -y libad9361
+            sudo apt-get install -y dpkg-dev debhelper devscripts rsync crossbuild-essential-armhf
+            ./ci/packaging/scopy-deb-build.sh scopy32 $GITHUB_WORKSPACE/Scopy-armhf.AppImage
+      - uses: actions/upload-artifact@v7
+        with:
+          name: scopy-armhf-deb-${{ env.commit_sha }}
+          path: |
+            ${{ github.workspace }}/scopy_*_armhf.deb
+            ${{ github.workspace }}/scopy_*.dsc
+            ${{ github.workspace }}/scopy_*.orig.tar.gz
+            ${{ github.workspace }}/scopy_*.debian.tar.xz
+          if-no-files-found: error
