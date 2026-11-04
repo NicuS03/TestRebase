@@ -1,0 +1,63 @@
+name: ARM32 native check
+
+# Answers: do armhf containers run natively on GitHub arm64 runners (no QEMU)?
+# Also checks the runner labels and Kuiper image prerequisites used by
+# analogdevicesinc/diagnostic_report PR 7.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/arm32-native-check.yml
+
+permissions:
+  contents: read
+
+jobs:
+  arm-containers:
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04-arm, ubuntu-26.04-arm]
+    steps:
+      - name: Runner image and CPU
+        run: |
+          set -euo pipefail
+          grep -E '^(PRETTY_NAME|VERSION_ID)=' /etc/os-release
+          echo "ImageOS=${ImageOS:-?} ImageVersion=${ImageVersion:-?}"
+          uname -m
+          lscpu | grep -E 'Model name|Vendor ID|CPU op-mode' || true
+
+      - name: QEMU binfmt handlers registered? (must be none)
+        run: |
+          set -euo pipefail
+          ls /proc/sys/fs/binfmt_misc/
+          if ls /proc/sys/fs/binfmt_misc/ | grep -qi qemu; then
+            echo "::warning::qemu binfmt handler present — native arm32 result would be ambiguous"
+          else
+            echo "no qemu binfmt"
+          fi
+
+      - name: Run arm32 and arm64 containers without QEMU
+        run: |
+          set -euo pipefail
+          for spec in \
+            "--platform linux/arm/v7|docker.cloudsmith.io/adi/containers/kuiper_basic_32:latest" \
+            "--platform linux/arm/v7|arm32v7/debian:trixie" \
+            "|docker.cloudsmith.io/adi/containers/kuiper_basic_64:latest"; do
+            flag="${spec%%|*}"; image="${spec#*|}"
+            echo "=== $image $flag"
+            # shellcheck disable=SC2086 # flag is meant to word-split
+            docker run --rm $flag "$image" sh -c \
+              'echo "uname -m: $(uname -m)"; command -v dpkg >/dev/null && echo "dpkg arch: $(dpkg --print-architecture)"; grep PRETTY_NAME /etc/os-release; if command -v curl >/dev/null; then echo "curl: present"; else echo "curl: MISSING"; fi'
+          done
+
+  x64-label:
+    runs-on: ubuntu-26.04
+    timeout-minutes: 5
+    steps:
+      - name: Runner image
+        run: |
+          grep -E '^(PRETTY_NAME|VERSION_ID)=' /etc/os-release
+          echo "ImageOS=${ImageOS:-?} ImageVersion=${ImageVersion:-?}"
